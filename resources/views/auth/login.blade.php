@@ -73,22 +73,27 @@
                                         </div>
                                     </div>
 
-
-
-
-
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-lg btn-block">
                                             Login
                                         </button>
                                     </div>
+
+                                    {{-- ✅ Tambahan bagian Register --}}
+                                    <div class="text-center mt-3">
+                                        <p class="mb-0">
+                                            Belum punya akun?
+                                            <a href="{{ route('register') }}" class="text-primary font-weight-bold">
+                                                Daftar Sekarang
+                                            </a>
+                                        </p>
+                                    </div>
                                 </form>
                             </div>
                         </div>
 
-
                         <div class="simple-footer">
-                            &copy; The Awikwok gengs {{ date('Y') }}
+                            &copy; The Awikwok Gengs {{ date('Y') }}
                         </div>
                     </div>
                 </div>

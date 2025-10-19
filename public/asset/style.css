@@ -71,7 +71,22 @@
  .nav-links a:hover::after {
      width: 100%;
  }
+.nav-links a.active {
+    color: var(--sky);
+    font-weight: 600;
+    position: relative;
+}
 
+.nav-links a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--sky);
+    border-radius: 2px;
+}
  .cta {
      background: var(--sky);
      color: white;

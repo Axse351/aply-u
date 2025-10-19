@@ -18,6 +18,37 @@
 
     <main>
         @yield('content')
+        {{-- SweetAlert CDN --}}
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        confirmButtonColor: '#0ea5e9',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                });
+            </script>
+        @endif
+
+        @if (session('error'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: '{{ session('error') }}',
+                        confirmButtonColor: '#dc2626',
+                    });
+                });
+            </script>
+        @endif
+
     </main>
 
     @include('layout.footer')

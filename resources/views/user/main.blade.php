@@ -51,30 +51,16 @@
     <section class="jobs">
         <h2>Lowongan Terbaru</h2>
         <div class="job-list">
-            <div class="job-card">
-                <h3>Frontend Developer</h3>
-                <p><strong>PT Digital Cipta</strong> - Jakarta</p>
-                <p>Menguasai ReactJS, HTML, CSS, dan API Integration.</p>
-                <a href="#" class="btn-apply">Lamar Sekarang</a>
-            </div>
-            <div class="job-card">
-                <h3>UI/UX Designer</h3>
-                <p><strong>Kreativa Studio</strong> - Bandung</p>
-                <p>Berpengalaman menggunakan Figma dan memahami design system.</p>
-                <a href="#" class="btn-apply">Lamar Sekarang</a>
-            </div>
-            <div class="job-card">
-                <h3>Data Analyst</h3>
-                <p><strong>InsightLab</strong> - Yogyakarta</p>
-                <p>Mampu menggunakan Python, SQL, dan Power BI untuk analisis data.</p>
-                <a href="#" class="btn-apply">Lamar Sekarang</a>
-            </div>
-            <div class="job-card">
-                <h3>Marketing Specialist</h3>
-                <p><strong>MarketPlus</strong> - Surabaya</p>
-                <p>Menguasai digital marketing, SEO, dan manajemen kampanye sosial media.</p>
-                <a href="#" class="btn-apply">Lamar Sekarang</a>
-            </div>
+            @forelse ($jobs as $job)
+                <div class="job-card">
+                    <h3>{{ $job->title }}</h3>
+                    <p><strong>{{ $job->category->name ?? 'Tanpa Kategori' }}</strong> - {{ $job->location }}</p>
+                    <p>{{ Str::limit($job->description, 120) }}</p>
+                    <a href="{{ route('user.jobs.show', $job->id) }}" class="btn-apply">Lamar Sekarang</a>
+                </div>
+            @empty
+                <p style="text-align:center;">Belum ada lowongan yang tersedia.</p>
+            @endforelse
         </div>
     </section>
     @push('scripts')
