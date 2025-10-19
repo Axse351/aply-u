@@ -77,8 +77,10 @@
             </div>
         </div>
     </section>
+
     @push('scripts')
         <script>
+            // Carousel logic
             const track = document.querySelector('.carousel-track');
             const slides = Array.from(track.children);
             const nextBtn = document.querySelector('.carousel-btn.next');
@@ -90,10 +92,25 @@
                 track.style.transform = `translateX(-${index * 100}%)`;
             }
 
-            nextBtn.addEventListener('click', () => showSlide(index + 1));
-            prevBtn.addEventListener('click', () => showSlide(index - 1));
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // biar gak ke-redirect ke login
+                showSlide(index + 1);
+            });
+
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // biar gak ke-redirect ke login
+                showSlide(index - 1);
+            });
 
             setInterval(() => showSlide(index + 1), 5000);
+
+            // Redirect ke halaman login untuk semua interaksi
+            document.addEventListener('click', function(e) {
+                // Kecuali klik tombol next/prev di carousel
+                if (!e.target.classList.contains('carousel-btn')) {
+                    window.location.href = "{{ route('login') }}";
+                }
+            });
         </script>
     @endpush
 @endsection
