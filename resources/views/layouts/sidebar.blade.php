@@ -36,7 +36,7 @@
             </li>
 
             <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('admin.users') }}">
                     <i class="fas fa-users"></i>
                     <span>Daftar User</span>
                 </a>
