@@ -1,47 +1,126 @@
 @extends('welcome')
 
 @section('content')
-    <section class="job-detail" style="padding: 60px 0; background-color: #f8f9fa;">
-        <div class="container" style="max-width: 800px; margin: 0 auto;">
-            <div class="card"
-                style="background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 30px;">
-                <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 15px; color: #333;">
-                    {{ $job->title }}
-                </h2>
+    <link rel="stylesheet" href="{{ asset('asset/job-detail.css') }}">
 
-                <div style="margin-bottom: 20px; color: #555;">
-                    <p><strong>Kategori:</strong> {{ $job->category->name ?? 'Tanpa Kategori' }}</p>
-                    <p><strong>Lokasi:</strong> {{ $job->location ?? 'Tidak tersedia' }}</p>
-                    <p><strong>Tanggal Posting:</strong> {{ $job->created_at->format('d M Y') }}</p>
-                </div>
+    <div class="container">
+        {{-- DETAIL PEKERJAAN --}}
+        <div class="section">
+            <h2>Detail Pekerjaan</h2>
 
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
-
-                <div style="color: #444; line-height: 1.7;">
-                    {!! nl2br(e($job->description)) !!}
-                </div>
-
-                <div style="margin-top: 30px; text-align: center;">
-                    <a href="{{ route('user.jobs.apply', $job->id) }}"
-                        style="
-                            display: inline-block;
-                            background-color: #007bff;
-                            color: white;
-                            padding: 12px 28px;
-                            border-radius: 8px;
-                            text-decoration: none;
-                            font-weight: 600;
-                            transition: 0.3s;">
-                        Lamar Sekarang
-                    </a>
+            <div class="job-detail-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Google_Logo.svg" alt="Logo Perusahaan"
+                    class="company-logo">
+                <div class="job-info">
+                    <h3>{{ $job->title }}</h3>
+                    <div class="company-name">{{ $job->company }}</div>
+                    <div class="job-meta">
+                        📍 {{ $job->location ?? 'Lokasi tidak tersedia' }} •
+                        💼 {{ $job->category->name ?? 'Tanpa Kategori' }} •
+                        🗓 {{ $job->created_at->format('d M Y') }}
+                    </div>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 25px;">
-                <a href="{{ route('user.lowongan') }}" style="color: #555; text-decoration: none;">
-                    ← Kembali ke Daftar Lowongan
-                </a>
+            <div class="job-desc">
+                {!! nl2br(e($job->description)) !!}
             </div>
         </div>
-    </section>
+
+        {{-- FORM LAMARAN --}}
+        <div class="section">
+            <h2>Form Lamaran</h2>
+
+            {{-- Tampilkan Error --}}
+            @if ($errors->any())
+                <div class="alert alert-danger"
+                    style="background:#f8d7da; padding:10px; margin-bottom:15px; border-radius:5px;">
+                    <ul style="margin:0; padding-left:20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- Tampilkan Success (popup sederhana) --}}
+            @if (session('success'))
+                <script>
+                    alert("{{ session('success') }}");
+                </script>
+            @endif
+
+            <form action="{{ route('user.jobs.apply', $job->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="form-row">
+                    <div>
+                        <label>Nama Lengkap</label>
+                        <input type="text" name="full_name" placeholder="Masukkan nama lengkap Anda"
+                            value="{{ old('full_name', auth()->user()->name) }}" required>
+                    </div>
+                    <div>
+                        <label>Usia</label>
+                        <input type="number" name="age" placeholder="Contoh: 25" value="{{ old('age') }}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Jenis Kelamin</label>
+                        <select name="gender" required>
+                            <option value="">Pilih jenis kelamin</option>
+                            <option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki
+                            </option>
+                            <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Status Pernikahan</label>
+                        <select name="marital_status" required>
+                            <option value="">Pilih status</option>
+                            <option value="Belum Menikah" {{ old('marital_status') == 'Belum Menikah' ? 'selected' : '' }}>
+                                Belum Menikah</option>
+                            <option value="Menikah" {{ old('marital_status') == 'Menikah' ? 'selected' : '' }}>Menikah
+                            </option>
+                            <option value="Cerai" {{ old('marital_status') == 'Cerai' ? 'selected' : '' }}>Cerai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Alamat Lengkap</label>
+                    <textarea name="address" placeholder="Masukkan alamat tempat tinggal Anda" required>{{ old('address') }}</textarea>
+                </div>
+
+                <div>
+                    <label>Harapan Pekerjaan</label>
+                    <textarea name="job_expectation" placeholder="Tuliskan harapan atau ekspektasi pekerjaan Anda (opsional)">{{ old('job_expectation') }}</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Unggah CV / Portofolio</label>
+                        <input type="file" name="cv" accept=".pdf,.doc,.docx" required>
+                    </div>
+                    <div>
+                        <label>Unggah Foto</label>
+                        <input type="file" name="photo" accept=".jpg,.jpeg,.png" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Kirim Lamaran</button>
+            </form>
+        </div>
+
+        <div style="text-align:center;">
+            <a href="{{ route('user.lowongan') }}" style="color:#555; text-decoration:none;">← Kembali ke Daftar
+                Lowongan</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; {{ date('Y') }} Lockin. All rights reserved.</p>
+    </footer>
 @endsection

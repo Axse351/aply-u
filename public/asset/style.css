@@ -407,6 +407,7 @@
   .job-card .btn-apply:hover {
       background: var(--teal);
   }
+  
 
   @media (max-width: 768px) {
       .carousel img {
